@@ -233,6 +233,41 @@ internal_macros::define_extension_trait! {
                 && self.witness_version() == Some(WitnessVersion::V0)
                 && self.as_bytes()[1] == OP_PUSHBYTES_20.to_u8()
         }
+
+        /// Checks whether a script is a P2PK output.
+        #[deprecated(since = "0.33.0", note = "use `ScriptPubKey::is_p2pk` instead")]
+        #[inline]
+        fn is_p2pk(&self) -> bool {
+            ScriptPubKey::from_bytes(self.as_bytes()).is_p2pk()
+        }
+
+        /// Checks whether a script is a P2PKH output.
+        #[deprecated(since = "0.33.0", note = "use `ScriptPubKey::is_p2pkh` instead")]
+        #[inline]
+        fn is_p2pkh(&self) -> bool {
+            ScriptPubKey::from_bytes(self.as_bytes()).is_p2pkh()
+        }
+
+        /// Checks whether a script is a P2SH output.
+        #[deprecated(since = "0.33.0", note = "use `ScriptPubKey::is_p2sh` instead")]
+        #[inline]
+        fn is_p2sh(&self) -> bool {
+            ScriptPubKey::from_bytes(self.as_bytes()).is_p2sh()
+        }
+
+        /// Checks whether a script is a bare multisig output.
+        #[deprecated(since = "0.33.0", note = "use `ScriptPubKey::is_multisig` instead")]
+        #[inline]
+        fn is_multisig(&self) -> bool {
+            ScriptPubKey::from_bytes(self.as_bytes()).is_multisig()
+        }
+
+        /// Checks whether a script is a SegWit program.
+        #[deprecated(since = "0.33.0", note = "use `ScriptPubKey::is_witness_program` instead")]
+        #[inline]
+        fn is_witness_program(&self) -> bool {
+            ScriptPubKey::from_bytes(self.as_bytes()).is_witness_program()
+        }
     }
 }
 

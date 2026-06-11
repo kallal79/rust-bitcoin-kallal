@@ -177,6 +177,10 @@ pub type CompressedPublicKey = FullPublicKey;
 #[doc(hidden)]
 pub type PublicKey = LegacyPublicKey;
 
+#[deprecated(since = "0.33.0", note = "use `EcdsaSighashType` from `crypto::sighash` instead")]
+#[doc(hidden)]
+pub type PsbtSighashType = sighash::EcdsaSighashType;
+
 // Re-export modules directly from lower level crates
 #[doc(inline)]
 pub use key_expression::bip32;
@@ -280,6 +284,35 @@ pub mod amount {
         #[inline]
         fn consensus_encode<W: Write + ?Sized>(&self, w: &mut W) -> Result<usize, io::Error> {
             self.to_sat().consensus_encode(w)
+        }
+    }
+
+    /// Deprecated extension methods for `Amount` from 0.32.
+    #[deprecated(since = "0.33.0", note = "These methods were removed or replaced.")]
+    pub trait AmountExt: Sized {
+        /// Unchecked addition.
+        #[deprecated(since = "0.33.0", note = "use `checked_add` instead")]
+        fn unchecked_add(self, rhs: Self) -> Self;
+        /// Unchecked subtraction.
+        #[deprecated(since = "0.33.0", note = "use `checked_sub` instead")]
+        fn unchecked_sub(self, rhs: Self) -> Self;
+        /// Format the value in a specific denomination.
+        #[deprecated(since = "0.33.0", note = "use `display_in` instead")]
+        fn fmt_value_in(self, f: &mut dyn core::fmt::Write, denom: Denomination) -> core::fmt::Result;
+    }
+
+    #[allow(deprecated)]
+    impl AmountExt for Amount {
+        fn unchecked_add(self, rhs: Self) -> Self {
+            self.checked_add(rhs).expect("overflow")
+        }
+
+        fn unchecked_sub(self, rhs: Self) -> Self {
+            self.checked_sub(rhs).expect("overflow")
+        }
+
+        fn fmt_value_in(self, f: &mut dyn core::fmt::Write, denom: Denomination) -> core::fmt::Result {
+            core::write!(f, "{}", self.display_in(denom))
         }
     }
 }
